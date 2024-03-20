@@ -1,0 +1,38 @@
+#hacer el docker compose de la app con mysql y phpmyadmin 
+#docker compose up -d
+
+version: '3.8'
+services:
+  phpmyadmin:
+    image: phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+    volumes:
+      - /sessions
+
+  mysql:
+    image: mysql
+    volumes:
+      - ./dbdata:/var/lib/mysql
+    container_name: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=itsv
+      - MYSQL_DATABASE=itsv
+      - MYSQL_USER=itsv
+      - MYSQL_PASSWORD=itsv
+
+  app:
+    build: .
+    ports:
+      - '8000:8000'
+    container_name: app
+    volumes:
+      - .:/app
+    depends_on:
+      - mysql
+    networks:
+      - itsv
+
+networks: 
+  itsv:
+    driver: bridge
