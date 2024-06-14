@@ -1,0 +1,30 @@
+version: "3"
+services:
+  appsmith:
+    image: index.docker.io/appsmith/appsmith-ce
+    container_name: appsmith
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./stacks:/appsmith-stacks
+    restart: unless-stopped
+    networks:
+      - my_network
+
+  mysql:
+    image: mysql
+    volumes:
+      - ./dbdata:/var/lib/mysql
+    container_name: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=mypassword
+      - MYSQL_DATABASE=Blockbuster
+      - MYSQL_USER=appsmith
+      - MYSQL_PASSWORD=appsmithpassword
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
